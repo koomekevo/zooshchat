@@ -17,7 +17,7 @@
   "authentication": {
     "entity": "user",
     "service": "users",
-    "secret": "0A3NmNJSp8Wsu+lEkoePmpQET3sg0fFm",
+    "secret": "HrMMfY7lAYtigC1ZBIoxlk4rekp1L/wM",
     "authStrategies": [
       "jwt",
       "local"
@@ -33,6 +33,12 @@
     "local": {
       "usernameField": "email",
       "passwordField": "password"
+    },
+    "oauth": {
+      "github": {
+        "key": "<Client ID>",
+        "secret": "<Client secret>"
+      }
     }
   }
 }

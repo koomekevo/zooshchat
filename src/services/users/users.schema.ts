@@ -1,5 +1,4 @@
-// For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import crypto from 'crypto'
+// // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
@@ -14,8 +13,7 @@ export const userSchema = Type.Object(
     id: Type.Number(),
     email: Type.String(),
     password: Type.Optional(Type.String()),
-    githubId: Type.Optional(Type.Number()),
-    avatar: Type.Optional(Type.String())
+    githubId: Type.Optional(Type.String())
   },
   { $id: 'User', additionalProperties: false }
 )
@@ -28,33 +26,17 @@ export const userExternalResolver = resolve<User, HookContext>({
   password: async () => undefined
 })
 
-// Schema for creating new users
-export const userDataSchema = Type.Pick(
-  userSchema,
-  ['email', 'password', 'githubId', 'avatar'],
-  {
-    $id: 'UserData',
-    additionalProperties: false
-  }
-)
+// Schema for creating new entries
+export const userDataSchema = Type.Pick(userSchema, ['email', 'password', 'githubId'], {
+  $id: 'UserData'
+})
 export type UserData = Static<typeof userDataSchema>
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
 export const userDataResolver = resolve<User, HookContext>({
-  password: passwordHash({ strategy: 'local' }),
-  avatar: async (value, user) => {
-    // If the user passed an avatar image, use it
-    if (value !== undefined) {
-      return value
-    }
-
-    // Gravatar uses MD5 hashes from an email address to get the image
-    const hash = crypto.createHash('md5').update(user.email.toLowerCase()).digest('hex')
-    // Return the full avatar URL
-    return `https://s.gravatar.com/avatar/${hash}?s=60`
-  }
+  password: passwordHash({ strategy: 'local' })
 })
 
-// Schema for updating existing users
+// Schema for updating existing entries
 export const userPatchSchema = Type.Partial(userSchema, {
   $id: 'UserPatch'
 })
@@ -79,9 +61,7 @@ export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve<UserQuery, HookContext>({
   // If there is a user (e.g. with authentication), they are only allowed to see their own data
   id: async (value, user, context) => {
-    // We want to be able to get a list of all users but
-    // only let a user modify their own data otherwise
-    if (context.params.user && context.method !== 'find') {
+    if (context.params.user) {
       return context.params.user.id
     }
 
