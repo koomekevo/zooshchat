@@ -13,32 +13,5 @@
     "client": "sqlite3",
     "connection": "zooshchat.sqlite",
     "useNullAsDefault": true
-  },
-  "authentication": {
-    "entity": "user",
-    "service": "users",
-    "secret": "HrMMfY7lAYtigC1ZBIoxlk4rekp1L/wM",
-    "authStrategies": [
-      "jwt",
-      "local"
-    ],
-    "jwtOptions": {
-      "header": {
-        "typ": "access"
-      },
-      "audience": "https://yourdomain.com",
-      "algorithm": "HS256",
-      "expiresIn": "1d"
-    },
-    "local": {
-      "usernameField": "email",
-      "passwordField": "password"
-    },
-    "oauth": {
-      "github": {
-        "key": "<Client ID>",
-        "secret": "<Client secret>"
-      }
-    }
   }
 }
